@@ -3,4 +3,4 @@
 Python version 3
 Tensorflow version 1.13
 
-Recommend running jupyter notebook for the ipynb file. 
+Recommend running Python file on Visual Studio Code; this will allow each "cell" of code (demarcated by #%%) to be run separately, much like a jupyter notebook. 
