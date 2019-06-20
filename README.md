@@ -16,6 +16,6 @@ Code for data viewing/extraction and comment lines beginning with double hashtag
 
 The *DATA* folder contains checkpoint files generated when training the model. Each checkpoint consists of three files: a .meta file that describes the model graph, a .data file that holds the tensor values associated with variables, and an index file that indexes.
 
-The *log_dir* folder is where any user outputs are stored to. *tensorweights.json* has all tensor weight and bias values.
+The *log_dir* folder is where any user outputs are stored to. *tensorweights.json* (inside the zip file) has all tensor weight and bias values.
 
 Lastly, the *print_output* folder are a collection of manually created text files containing *print* outputs.
