@@ -9,7 +9,6 @@ import math
 import sys
 import json
 print('All libraries imported')
-print('If you want to view or extract data, skip to bottom section')
 
 
 #%%
@@ -26,7 +25,7 @@ sess = tf.InteractiveSession(config=config)
 ## Importing data -- expect errors about soon-to-be-deprecated packages
 
 from tensorflow.examples.tutorials.mnist import input_data
-mnist_data = input_data.read_data_sets('/tmp/mnistdata', validation_size=0)
+mnist_data = input_data.read_data_sets('./DATA/mnistdata', validation_size=0)
 print('All data imported')
 
 images = tf.placeholder(tf.float32, [None, 784], 'images')
@@ -119,7 +118,7 @@ def evaluate():
     return IZY, IZX, acc, avg_acc, 1-acc, 1-avg_acc
 
 #%%
-## Training occurs here
+## Training occurs here -- skip this cell if you want to open pre-existing checkpoint files
 print('Training beginning...')
 for epoch in range(200):
     for step in range(steps_per_batch):
@@ -187,7 +186,7 @@ from tensorflow.python import pywrap_tensorflow
 
 reader = pywrap_tensorflow.NewCheckpointReader(modelPath)
 var_to_shape_map = reader.get_variable_to_shape_map()
-    
+
 for key in sorted(var_to_shape_map):
     try:
         termsInOneArray = reader.get_tensor(key)[0].size
@@ -203,13 +202,17 @@ for key in sorted(var_to_shape_map):
         print("tensor_name: ", key)
         print(reader.get_tensor(key))
 
+#%%
+## Another quick way to check tensor size:
+print(vars)
+
 
 #%%
 ## Save everything (including weights) into text file:
 ## pbtxt format is not great for manually parsing data but can be useful in reloading data into the graph
-    log_dir = "./log_dir/"
-    out_file = "train.pbtxt"
-    tf.train.write_graph(input_graph_def, logdir=log_dir, name=out_file, as_text=True)
+log_dir = "./log_dir/"
+out_file = "train.pbtxt"
+tf.train.write_graph(input_graph_def, logdir=log_dir, name=out_file, as_text=True)
 
 
 #%%
@@ -224,6 +227,12 @@ for key in sorted(var_to_shape_map):
         break
     ## tensor_values.update( key_str: tensor_val )
 
+import os
+
 tensor_dict = json.dumps(tensor_values)
-with open('decoder_values.json', 'w') as json_file:
+output_path = os.path.join(log_dir, "decoder_values.json")
+with open(output_path, 'w') as json_file:
   json_file.write(tensor_dict)
+
+
+#%%
