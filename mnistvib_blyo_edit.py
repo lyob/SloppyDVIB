@@ -9,6 +9,7 @@ import math
 import sys
 import json
 print('All libraries imported')
+print('If you want to extract or view data from model, then skip the code cell containing the training.')
 
 
 #%%
@@ -118,7 +119,8 @@ def evaluate():
     return IZY, IZX, acc, avg_acc, 1-acc, 1-avg_acc
 
 #%%
-## Training occurs here -- skip this cell if you want to open pre-existing checkpoint files
+## Training occurs here
+## Skip this cell if you want to open pre-existing checkpoint files
 print('Training beginning...')
 for epoch in range(200):
     for step in range(steps_per_batch):
@@ -131,12 +133,11 @@ print('Training complete')
 savepth = saver.save(sess, './DATA/mnistvib', global_step) ## data is stored here
 print('Checkpoint saved')
 
-#%%
+
 ## accuracy data applied with Exponential Moving Average
 saver_polyak.restore(sess, savepth)
 evaluate()
 
-#%%
 ## accuracy data without EMA
 saver.restore(sess, savepth)
 evaluate()
@@ -146,7 +147,6 @@ evaluate()
 
 
 #%%
-######### (SKIP TO HERE IF VIEWING OR EXTRACTING DATA FILES) ##########
 ## data extraction 
 modelPath = './DATA/mnistvib.ckpt-120000' # trained model (graph/meta, index, data/weights)
 graphfile = './DATA/mnistvib.ckpt-120000.meta' # the model used in training
@@ -208,12 +208,12 @@ print(vars)
 
 
 #%%
-## Save everything (including weights) into text file:
-## pbtxt format is not great for manually parsing data but can be useful in reloading data into the graph
+## Save graph to text file:
+## pbtxt format is useful for reloading data into the graph
 log_dir = "./log_dir/"
 out_file = "train.pbtxt"
 tf.train.write_graph(input_graph_def, logdir=log_dir, name=out_file, as_text=True)
-
+print('graph saved to text file')
 
 #%%
 ## Save decoder tensors to file -- if statement can be removed to save all tensors
@@ -233,6 +233,4 @@ tensor_dict = json.dumps(tensor_values)
 output_path = os.path.join(log_dir, "decoder_values.json")
 with open(output_path, 'w') as json_file:
   json_file.write(tensor_dict)
-
-
-#%%
+print('decoder values saved to text file')
