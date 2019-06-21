@@ -17,7 +17,7 @@ To extract or view data (e.g. the weights and biases), skip or comment out the c
 
 *mnistvib_blyo_edit.py* is the code. A supplementary requirements file will be added soon.
 
-The *DATA* folder contains checkpoint files generated when training the model. Each checkpoint consists of three files: a .meta file that describes the model graph, a .data file that holds the tensor values associated with variables, and an index file that indexes.
+The *DATA* folder contains checkpoint files generated when training the model. Each checkpoint consists of three files: an .index file that stores a list of variables names and shapes used, a .data file that holds the actual values of the variables saved, and a .meta file that contains all information required to restore a training or inference process.
 
 The *log_dir* folder is where any user outputs are stored to. *tensorweights.json* (inside the zip file) has all tensor weight and bias values.
 
