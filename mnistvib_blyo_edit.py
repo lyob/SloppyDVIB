@@ -9,7 +9,7 @@ import math
 import sys
 import json
 print('All libraries imported')
-print('If you want to extract or view data from model, then skip the code cell containing the training.')
+print('If you want to extract or view data from model, skip the code cell containing the training.')
 
 
 #%%
