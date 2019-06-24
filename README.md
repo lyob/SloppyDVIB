@@ -21,4 +21,7 @@ The *DATA* folder contains checkpoint files generated when training the model. E
 
 The *log_dir* folder is where any user outputs are stored to. *tensorweights.json* (inside the zip file) has all tensor weight and bias values.
 
-Lastly, the *print_output* folder are a collection of manually created text files containing *print* outputs.
+Lastly, the *print_output* folder is a collection of manually created text files containing various *print* outputs.
+
+---
+Other notes and resources can be found on [this page](https://www.notion.so/lyo/DVIB-github-notes-ab872cd504904f5996f6172341655738) that I update. 
