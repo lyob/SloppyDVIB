@@ -1,0 +1,34 @@
+Some mappings
+
+accuracy			<tf.Tensor 'Mean_1:0' shape=() dtype=float32>
+avg_accuracy		<tf.Tensor 'Mean_3:0' shape=() dtype=float32>
+BETA				0.001
+class_loss			<tf.Tensor 'truediv:0' shape=() dtype=float32>
+info_loss			<tf.Tensor 'truediv_1:0' shape=() dtype=float32>
+IZX_bound			"
+
+****** in the code: IZY_bound = info_loss ******
+
+IZY_bound			<tf.Tensor 'sub:0' shape=() dtype=float32>
+total_loss			<tf.Tensor 'add:0' shape=() dtype=float32>
+train_tensor		<tf.Tensor 'train_op/control_dependency:0' shape=() dtype=float32>
+
+encoding			<tfp.ditributions.Normal 'encoder/Normal/' batch_shape=(?, 256) event_shape=()...
+images 				<tf.Tensor 'images:0' shape=(?,784) dtype=float32>
+labels 				<tf.Tensor 'labels:0' shape=(?,) dtype=int64>
+logits 				<tf.Tensor 'decoder/fully_connected/BiasAdd:0' shape=(?, 10) dtype=float32>
+many_logits 		<tf.Tensor 'decoder_1/fully_connected/BiasAdd:0' shape=(12, ?, 10) dtype=float32>
+one_hot_labels 		<tf.Tensor 'one_hot:0' shape=(?, 10) dtype=float32>
+prior 				<tfp.distributions.Normal 'Normal_1/' batch_shape=() event_shape=() dtype=float32>
+
+global_step			<tf.Variable 'global_step:0' shape=() dtype=int64_ref>
+learning_rate		<tf.Tensor 'ExponentialDecay:0' shape=() dtype=float32>
+vars				[<tf.Variable 'encode...'>, <tf.Variable 'encode...'>...] 					
+
+saved to mnistvib-12000
+
+
+im 					Count = (100, 784) 			array([[0, 0, 0, ...], [...], [...]...])
+ls 					Count = (100,)				array([6, 4, 8, 0, 1, 7, 9, 9, 9, ...])
+
+
