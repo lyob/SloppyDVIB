@@ -10,6 +10,7 @@ import pickle
 # parameters -----------
 weight_change = 0.01
 beta = 3
+l = 9
 # ----------------------
 
 # import dataset
@@ -18,13 +19,13 @@ mnist_data = small_mnist.load_8x8_mnist()
 print('All data imported')
 
 # import original
-original = pickle.load( open( "fim1.p", "rb" ) )
+original = pickle.load( open( "./pickle/fim1.p", "rb" ) )
 e1w_val, e2w_val, e3w_val, dw_val = original["e1w_val"], original['e2w_val'], original['e3w_val'], original['dw_val']
 e1b_val, e2b_val, e3b_val, db_val = original['e1b_val'], original['e2b_val'], original['e3b_val'], original['db_val']
 logits, softmax = original["logits"], original['softmax']
 
 # paths
-modelPath = './DATA/h100b32-beta'+str(beta)+'-test-15000'
+modelPath = './DATA/h100b32-beta{}-test-15000'.format(beta)
 graphfile = modelPath + '.meta'
 savePath = './output/'
 
@@ -32,7 +33,7 @@ savePath = './output/'
 # now we tweak one parameter and compare the output logits
 def calc_altered_softmax(parameter):
     if parameter % 1000 == 0:
-        print("parameter: "+str(parameter)+"/20001")
+        print("parameter: {}/20001".format(parameter))
     tf.reset_default_graph()
 
     graph1 = tf.Graph()
@@ -160,14 +161,14 @@ def calc_score(label, parameter):
 def calc_all_scores():
     print('----------------calculating all theta_i values------------------')
     scores = {}
-    for label in range(0, 1): # for label = 0
-        print("------------label: "+str(label)+"/9------------")
+    for label in range(l,l+1): # for label = 0
+        print("------------label: {}/9------------".format(label))
         for param in range(20002):
             score = calc_score(label, param)
-            scores.update({ 'l'+str(label)+'p'+str(param) : score })
+            scores.update({ 'l{}p{}'.format(label,param) : score })
     return scores
 # this is fine
 scores = calc_all_scores()
 
-pickle.dump( scores, open("scores0.p", "wb") )
-print( "the scores for label 0 has been pickled" )
+pickle.dump( scores, open("./pickle/scores{}.p".format(l), "wb") )
+print( "the scores for label {} has been pickled".format(l) )

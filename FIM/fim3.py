@@ -17,7 +17,7 @@ for label in range(10):
 # scores = {"label0":{"l0p0":X, "l0p1":X, ...}, "label1": {"l1p0":X, "l1p1":X, ...}, ... }
 # where X is a value
 
-print(scores["label0"]["l0p20002"])
+print(scores["label0"]["l0p20001"])
 
 #%%
 # build the matrix by calculating score(i, label) * score(j, label) for all pairs of parameters i,j
