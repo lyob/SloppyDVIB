@@ -1,0 +1,8 @@
+scikit-learn==0.21.2
+tensorflow==1.14.0
+tensorflow-probability==0.7.0
+numpy==1.16.4
+matplotlib==3.1.0
+jupyter
+
+setuptools==41.0.0

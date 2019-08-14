@@ -1,2 +1,0 @@
-model_checkpoint_path: "/tmp/mnistvib.ckpt-120000"
-all_model_checkpoint_paths: "/tmp/mnistvib.ckpt-120000"

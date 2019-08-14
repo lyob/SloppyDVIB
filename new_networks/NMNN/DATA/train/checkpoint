@@ -1,0 +1,2 @@
+model_checkpoint_path: "NMNN-beta12-train-20000"
+all_model_checkpoint_paths: "NMNN-beta12-train-20000"

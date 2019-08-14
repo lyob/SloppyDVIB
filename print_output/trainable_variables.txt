@@ -1,9 +1,0 @@
-## Trainable variables: 
-encoder/fully_connected/weights:0
-encoder/fully_connected/biases:0
-encoder/fully_connected_1/weights:0
-encoder/fully_connected_1/biases:0
-encoder/fully_connected_2/weights:0
-encoder/fully_connected_2/biases:0
-decoder/fully_connected/weights:0
-decoder/fully_connected/biases:0

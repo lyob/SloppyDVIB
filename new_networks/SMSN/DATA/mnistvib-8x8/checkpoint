@@ -1,0 +1,2 @@
+model_checkpoint_path: "mnist-8x8-buff0-beta15-train-15000"
+all_model_checkpoint_paths: "mnist-8x8-buff0-beta15-train-15000"

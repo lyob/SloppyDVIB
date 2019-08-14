@@ -1,0 +1,4 @@
+Results from epoch=20 training
+
+IZY, IZX, acc, avg_acc, 1-acc, 1-avg_acc = 
+(3.213706, 57.16137, 0.9794, 0.9818, 0.02060002088546753, 0.01819998025894165)

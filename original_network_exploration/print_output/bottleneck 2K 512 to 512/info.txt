@@ -1,0 +1,2 @@
+Comparing checkpoint data from two separate training incidents, both with 2K = 512. 
+the file names (modelPath) are mnistvib.ckpt-120000 and mnistvib-120000. 

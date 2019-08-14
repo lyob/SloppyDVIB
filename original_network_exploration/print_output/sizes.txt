@@ -1,0 +1,13 @@
+MLP is of the form 784 - 1024 - 1024 - 256
+
+encoder/fully_connected/biases:		1024
+encoder/fully_connected/weights:	784 * 1024 = 802816
+
+encoder/fully_connected_1/biases:	1024
+encoder/fully_connected_1/weights:	1024 * 1024 = 1048576
+
+encoder/fully_connected_2/biases:	512
+encoder/fully_connected_2/weights:	1024 * 512 = 524288
+
+decoder/fully_connected/biases: 	10
+decoder/fully_connected/weights: 	256 * 10 = 2560
