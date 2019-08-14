@@ -19,7 +19,7 @@ beta = 3
 # import dataset
 import FIM.small_mnist_one_image as small_mnist
 mnist_data = small_mnist.load_8x8_mnist()
-print('All data imported')
+print('All data imported', flush=True)
 
 # paths
 modelPath = './FIM/DATA/h100b32-beta'+str(beta)+'-test-15000'
@@ -86,7 +86,7 @@ sess.close()
 # now we tweak one parameter and compare the output logits
 def calc_altered_softmax(parameter):
     if parameter % 1000 == 0:
-        print("parameter: "+str(parameter)+"/20001")
+        print("parameter: "+str(parameter)+"/20001", flush=True)
     tf.reset_default_graph()
 
     graph1 = tf.Graph()
@@ -211,10 +211,10 @@ def calc_score(label, parameter):
 #%%
 # build the dictionary of scores for all label and all network parameters
 def calc_all_scores():
-    print('----------------calculating all the scores------------------')
+    print('----------------calculating all the scores------------------', flush=True)
     scores = {}
     for label in range(10):
-        print("------------label: "+str(label)+"/9------------")
+        print("------------label: "+str(label)+"/9------------", flush=True)
         for param in range(20002):
             score = calc_score(label, param)
             scores.update({ 'l'+str(label)+'p'+str(param) : score })
@@ -224,10 +224,10 @@ scores = calc_all_scores()
 #%%
 # build the matrix by calculating score(i, label) * score(j, label) for all pairs of parameters i,j
 def calc_score_pairs():
-    print('------------------calculating score pairs-------------------')
+    print('------------------calculating score pairs-------------------', flush=True)
     score_pairs = []
     for label in range(10):
-        print('-------label: '+str(label)+'/9--------')
+        print('-------label: '+str(label)+'/9--------', flush=True)
         score_pairs.append({})
         for i in range(20002):
             for j in range(20002):
@@ -243,7 +243,7 @@ score_pairs = calc_score_pairs()
 #%%
 # calculate FIM by multiplying the matrix for each label with the probability of that label given optimal parameters
 def calc_fim():
-    print('-----------------------calculating the FIM---------------------------')
+    print('-----------------------calculating the FIM---------------------------', flush=True)
     fim = {} # this will be a 20002 * 20002 matrix
     for i in range(20002):
         for j in range(20002):
@@ -262,7 +262,7 @@ fim = calc_fim()
 #%%
 # converting the dictionary into a matrix
 def dict_to_matrix(d):
-    print('-----------------converting the dictionary FIM into an array-----------------')
+    print('-----------------converting the dictionary FIM into an array-----------------', flush=True)
     mtx = np.zeros((20002,20002))
     for i in range(20002):
         for j in range(20002):
@@ -277,7 +277,7 @@ np.savetxt(mfim_file, mfim, delimiter=',')
 #%%
 # calculating the eigenvalues and eigenvectors of the matrix
 from scipy.linalg import eigh
-print('----------------calculating the eigenvectors and eigenvalues of the FIM---------------')
+print('----------------calculating the eigenvectors and eigenvalues of the FIM---------------', flush=True)
 w, v = eigh(mfim)
 
 #%%

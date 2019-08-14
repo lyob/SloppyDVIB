@@ -1,8 +1,3 @@
-'''
-Calculates the elements of the FIM matrix for the h100b32 network
-'''
-#%%
-
 #%%
 ## libraries
 import numpy as np
@@ -10,6 +5,7 @@ import tensorflow as tf
 import math
 import sys
 import scipy
+import pickle
 
 # parameters -----------
 weight_change = 0.01
@@ -17,70 +13,20 @@ beta = 3
 # ----------------------
 
 # import dataset
-import FIM.small_mnist_one_image as small_mnist
+import small_mnist_one_image as small_mnist
 mnist_data = small_mnist.load_8x8_mnist()
 print('All data imported')
 
+# import original
+original = pickle.load( open( "fim1.p", "rb" ) )
+e1w_val, e2w_val, e3w_val, dw_val = original["e1w_val"], original['e2w_val'], original['e3w_val'], original['dw_val']
+e1b_val, e2b_val, e3b_val, db_val = original['e1b_val'], original['e2b_val'], original['e3b_val'], original['db_val']
+logits, softmax = original["logits"], original['softmax']
+
 # paths
-modelPath = './FIM/DATA/h100b32-beta'+str(beta)+'-test-15000'
+modelPath = './DATA/h100b32-beta'+str(beta)+'-test-15000'
 graphfile = modelPath + '.meta'
-savePath = './FIM/output/'
-
-#%%
-## Gathering initial weights and outputs
-tf.reset_default_graph()
-
-graph0 = tf.Graph()
-with graph0.as_default():
-    sess0 = tf.Session()
-
-with sess0 as sess:
-    loader = tf.train.import_meta_graph(graphfile)
-    loader.restore(sess, modelPath) # restores the graph
-
-    ## check all trainable variables in the graph (weights and biases):
-    # print("## Trainable variables: ")
-    # for v in tf.trainable_variables():
-    #     print(v.name)
-
-    # weights
-    e1w = graph0.get_tensor_by_name('encoder/fully_connected/weights:0')
-    e2w = graph0.get_tensor_by_name('encoder/fully_connected_1/weights:0')
-    e3w = graph0.get_tensor_by_name('encoder/fully_connected_2/weights:0')
-    dw  = graph0.get_tensor_by_name('decoder/fully_connected/weights:0')
-
-    # biases
-    e1b = graph0.get_tensor_by_name('encoder/fully_connected/biases:0')
-    e2b = graph0.get_tensor_by_name('encoder/fully_connected_1/biases:0')
-    e3b = graph0.get_tensor_by_name('encoder/fully_connected_2/biases:0')
-    db  = graph0.get_tensor_by_name('decoder/fully_connected/biases:0')
-
-    # outputs
-    logits = graph0.get_tensor_by_name('decoder/fully_connected/BiasAdd:0')
-    results = tf.argmax(logits, 1)
-    softmax = tf.nn.softmax(logits, 1)
-
-    # preparing the input feed 
-    images = graph0.get_tensor_by_name('images:0')
-    labels = graph0.get_tensor_by_name('labels:0')
-    feed_dict = {images: mnist_data.test.images, labels: mnist_data.test.labels}
-
-    # extracting values from the graph
-    e1w_val, e2w_val, e3w_val, dw_val = sess.run([e1w, e2w, e3w, dw], feed_dict=feed_dict)
-    e1b_val, e2b_val, e3b_val, db_val = sess.run([e1b, e2b, e3b, db], feed_dict=feed_dict)
-    logits, results, softmax = sess.run([logits, results, softmax], feed_dict=feed_dict)
-
-    # print output
-    # print("weights for 1st encoding layer: {}".format(e1w_val))
-    # print("shape of the weights: {}".format(e1w_val.shape))
-    # print("biases for 1st encoding layer: {}".format(e1b_val))
-    # print("shape of the biases: {}".format(e1b_val.shape))
-    # print("logits: {}".format(logits))
-    # print("shape of logits: {}".format(logits.shape))
-    # print("onehot: {}".format(onehot))
-    # print("final result: {}".format(results))
-sess.close()
-
+savePath = './output/'
 
 #%%
 # now we tweak one parameter and compare the output logits
@@ -202,18 +148,19 @@ def calc_altered_softmax(parameter):
     sess.close()
 
 #%%
-# Calculations for FIM matrix elements
 def calc_score(label, parameter):
     softmax_mod, delta_theta = calc_altered_softmax(parameter)
-    score = ( np.log(softmax_mod[0][label]) - np.log(softmax[0][label]) ) / delta_theta
+    if delta_theta != 0:
+        score = ( np.log(softmax_mod[0][label]) - np.log(softmax[0][label]) ) / delta_theta
+    else:
+        score = ( np.log(softmax_mod[0][label]) - np.log(softmax[0][label]) ) / 0.0001
     return score
 
-#%%
-# build the dictionary of scores for all label and all network parameters
+# build the dictionary of scores
 def calc_all_scores():
-    print('----------------calculating all the scores------------------')
+    print('----------------calculating all theta_i values------------------')
     scores = {}
-    for label in range(10):
+    for label in range(0, 1): # for label = 0
         print("------------label: "+str(label)+"/9------------")
         for param in range(20002):
             score = calc_score(label, param)
@@ -221,69 +168,6 @@ def calc_all_scores():
     return scores
 # this is fine
 scores = calc_all_scores()
-#%%
-# build the matrix by calculating score(i, label) * score(j, label) for all pairs of parameters i,j
-def calc_score_pairs():
-    print('------------------calculating score pairs-------------------')
-    score_pairs = []
-    for label in range(10):
-        print('-------label: '+str(label)+'/9--------')
-        score_pairs.append({})
-        for i in range(20002):
-            for j in range(20002):
-                if 'i'+str(j)+'j'+str(i) in score_pairs[label]:
-                    score_pairs[label]['i'+str(i)+'j'+str(j)] = score_pairs[label]['i'+str(j)+'j'+str(i)]
-                else:
-                    score_pairs[label].update( {'i'+str(i)+'j'+str(j) : scores['l'+str(label)+'p'+str(i)] * scores['l'+str(label)+'p'+str(j)]} )
-    return score_pairs
-# we have the if cond because sp(i,j|l) = sp(j,i|l) -- this would remove 10*20002 unnecessary calculations, but it 
-# this is fine
-score_pairs = calc_score_pairs()
 
-#%%
-# calculate FIM by multiplying the matrix for each label with the probability of that label given optimal parameters
-def calc_fim():
-    print('-----------------------calculating the FIM---------------------------')
-    fim = {} # this will be a 20002 * 20002 matrix
-    for i in range(20002):
-        for j in range(20002):
-            if 'i'+str(j)+'j'+str(i) in fim:
-                fim['i'+str(i)+'j'+str(j)] = fim['i'+str(j)+'j'+str(i)]
-            else:
-                sum = 0
-                for label in range(10):
-                    sum += softmax[0][label] * score_pairs[label]['i'+str(i)+'j'+str(j)]
-                fim['i'+str(i)+'j'+str(j)] = sum
-    return fim
-# we can use the same trick we used in score_pairs above: if fim(ji|l) already exists then copy that value to fim(ij|l) 
-
-fim = calc_fim()
-
-#%%
-# converting the dictionary into a matrix
-def dict_to_matrix(d):
-    print('-----------------converting the dictionary FIM into an array-----------------')
-    mtx = np.zeros((20002,20002))
-    for i in range(20002):
-        for j in range(20002):
-            mtx[i][j] = d["i"+str(i)+"j"+str(j)]
-    return mtx
-
-mfim = dict_to_matrix(fim)
-
-mfim_file = savePath+'fim.csv'
-np.savetxt(mfim_file, mfim, delimiter=',')
-
-#%%
-# calculating the eigenvalues and eigenvectors of the matrix
-from scipy.linalg import eigh
-print('----------------calculating the eigenvectors and eigenvalues of the FIM---------------')
-w, v = eigh(mfim)
-
-#%%
-# writes output to a file
-w_file = savePath+'eigenvalues.csv'
-v_file = savePath+'eigenvectors.csv'
-
-np.savetxt(w_file, w, delimiter=',')
-np.savetxt(v_file, v, delimiter=',')
+pickle.dump( scores, open("scores0.p", "wb") )
+print( "the scores for label 0 has been pickled" )
