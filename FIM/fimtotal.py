@@ -2,12 +2,12 @@
 #
 # The file system should have the following structure:
 # FIM
-# ├───fimtotal.py
 # ├───/DATA
 # ├───/output
 # ├───/json
 # ├───/pickle
 # ├───/plots
+# ├───fimtotal.py
 # └───fim4.py
 #%%
 
