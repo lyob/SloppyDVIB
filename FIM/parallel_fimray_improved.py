@@ -335,7 +335,7 @@ if __name__ == '__main__':
     out = calc_original()
 
     # fim2.py
-    ray.init(object_store_memory=40*1000000000) # changed to 80G in the cluster to see what happens
+    ray.init(object_store_memory=80*1000000000) # changed to 80G in the cluster to see what happens
     scores = calc_scores_all_labels(out)
 
     # fim3.py
