@@ -1,3 +1,5 @@
+# This code takes in the FIM matrix and outputs its eigenvectors and eigenvalues as npy files
+
 #%%
 ## libraries
 import numpy as np
@@ -5,7 +7,8 @@ import scipy
 from memory_profiler import profile
 #%%
 # paths
-savePath = './output/'
+beta = 4
+savePath = './output/beta{}/'
 
 # loading matrix array
 def load_matrix():
@@ -36,11 +39,11 @@ if __name__ == "__main__":
     w, v = diagonalise(fim)
     print( '------ The matrix has been successfully diagonalised ------')
 
-    export_npy('eigenvalues.npy', w)
-    export_npy('eigenvectors.npy', v)
+    export_npy('b{}-eigenvalues.npy'.format(beta), w)
+    export_npy('b{}-eigenvectors.npy'.format(beta), v)
 
-    export_csv('eigenvalues.csv', w)
-    export_csv('eigenvectors.csv', v)
+    export_csv('b{}-eigenvalues.csv'.format(beta), w)
+    export_csv('b{}-eigenvectors.csv'.format(beta), v)
 
     print( '------ The eigenvectors and eigenvalues of the FIM matrix have been saved ------' )
 
