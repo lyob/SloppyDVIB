@@ -4,20 +4,19 @@
 ## libraries
 import numpy as np
 import scipy
-from memory_profiler import profile
+# from memory_profiler import profile
 #%%
 # paths
-beta = 4
-savePath = './output/beta{}/'
+loadpath = '/project2/sepalmer/blyo/data-fim/'
+outpath = '/project2/sepalmer/blyo/data-eigs/'
 
 # loading matrix array
 def load_matrix():
-    fim = np.load( savePath + 'fim.npy' )
+    fim = np.load( loadpath + 'fim-b{}.npy'.format(beta) )
     return fim
 
-
 # calculating the eigenvalues and eigenvectors of the symmetric square matrix
-@profile
+# @profile
 def diagonalise(fim):
     from scipy.linalg import eigh
     print('------ calculating the eigenvectors and eigenvalues of the FIM ------')
@@ -26,25 +25,28 @@ def diagonalise(fim):
 # results = {"eigenvalues": w, 'eigenvectors': v}
 
 def export_npy(output_name, array):
-    np.save(savePath + output_name, array)
+    np.save(outpath + output_name, array)
     print("The array has been exported as {}".format(output_name))
 
 def export_csv(output_name, array):
-    np.savetxt(savePath + output_name, array, delimiter=',')
+    np.savetxt(outpath + output_name, array, delimiter=',')
     print("The array has been exported as {}".format(output_name))
 
 #%%
 if __name__ == "__main__":
-    fim = load_matrix()
-    w, v = diagonalise(fim)
-    print( '------ The matrix has been successfully diagonalised ------')
 
-    export_npy('b{}-eigenvalues.npy'.format(beta), w)
-    export_npy('b{}-eigenvectors.npy'.format(beta), v)
+    global beta
 
-    export_csv('b{}-eigenvalues.csv'.format(beta), w)
-    export_csv('b{}-eigenvectors.csv'.format(beta), v)
+    for b in range(13):
+        beta = b
+        print('---------- New beta = {} ----------'.format(beta))
+        
+        fim = load_matrix()
+        w, v = diagonalise(fim)
+        print('------ The matrix has been successfully diagonalised ------')
 
-    print( '------ The eigenvectors and eigenvalues of the FIM matrix have been saved ------' )
+        export_npy('b{}-evalues.npy'.format(beta), w)
+        export_npy('b{}-vectors.npy'.format(beta), v)
+        print('------ The eigenvectors and eigenvalues have been exported ------')
 
 #%%
