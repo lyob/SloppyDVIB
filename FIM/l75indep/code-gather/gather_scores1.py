@@ -6,25 +6,34 @@
 import numpy as np
 import tensorflow as tf
 import pickle
+import multiprocessing as mp
 import ray
+import psutil
 import nujson as ujson
 import timing
-import os
-import sys
+from memory_profiler import profile
+
+# dynamic parsing of name and path
+own_name = os.path.splitext(sys.argv[0])
+own_name = own_name[0][-14:]
+print('file name is {}'.format(own_name))
 
 filepath = os.path.dirname(os.path.abspath(__file__))
-
+basepath = filepath[:-12]
+print('base path is {}'.format(basepath))
 
 ### global variables ###
 # parameters -----------
 weight_change = 0.01
 size = 20002 # size of network is 20002
-basepath='/home/blyo/python_tests/l74indep'
+# basepath='/home/blyo/python_tests/l74indep'
 
 # dataset
 import small_mnist_one_image_offline_l72 as small_mnist
 mnist_data = small_mnist.load_8x8_mnist()
 print('All data imported')
+
+
 
 
 #----------------------fim1.py------------------------------------------------
@@ -271,10 +280,27 @@ if __name__ == '__main__':
 
     global beta
 
-    for b in range(0, 3):
-        beta = b
-        out = calc_original()
-        scores = calc_scores_all_labels(out)
+    if '1' in own_name:
+        for b in range(0, 3):
+            beta = b
+            print(b)
+    elif '2' in own_name:
+        for b in range(3, 6):
+            beta = b
+            print(b)
+    elif '3' in own_name:
+        for b in range(6, 9):
+            beta = b
+            print(b)
+    elif '4' in own_name:
+        for b in range(9,11):
+            beta = b
+            print(b)
+    elif '5' in own_name:
+        for b in range(11,13):
+            beta = b
+            print(b)
+    else:
+        raise Exception("The filename doesn't contain a number between 1 and 5")
+
         
-
-
