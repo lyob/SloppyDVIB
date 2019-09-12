@@ -23,12 +23,17 @@ print('model version is {}'.format(model)) # l7Xindep
 # parameters -----------
 size = 20002 # size of network is 20002
 beta = own_name[-1] # the bit at the end
-section = own_name[0]  # the bit at the front
+section = int(own_name[0])  # the bit at the front
 
 # paths
 loadpath = basepath+'/data-scores/'
 outpath = '/dali/sepalmer/blyo/'+model+'/data-fim/'
 jsonpath = outpath
+
+print('beta is {}/9'.format(beta))
+print('section is {}/2'.format(section))
+print('loadpath is {}'.format(loadpath))
+print('outpath is {}'.format(outpath))
 
 
 #----------------------fim1.py------------------------------------------------
@@ -106,7 +111,7 @@ if __name__ == '__main__':
     scores = load_from_json('scores_all_labels-b{}.json'.format(beta))
     out = load_from_pickle('orig_network-b{}.p'.format(beta))
 
-    if section == 1:       
+    if section == 1:
         fim = calculate_fim(scores, out['softmax'], 0, 5)
         export_fim(fim)
     elif section == 2:
