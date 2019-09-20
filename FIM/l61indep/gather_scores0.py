@@ -9,10 +9,12 @@ import pickle
 import ray
 import nujson as ujson
 import timing
+import os
+import sys
 
 # dynamic parsing of name and path
 own_name = os.path.splitext(sys.argv[0])
-own_name = own_name[0][-14:]
+own_name = own_name[0][15:]
 print('file name is {}'.format(own_name))
 
 filepath = os.path.dirname(os.path.abspath(__file__))
@@ -23,9 +25,10 @@ print('base path is {}'.format(basepath))
 # parameters -----------
 weight_change = 0.01
 size = 20002 # size of network is 20002
+beta  = own_name[13:] # should be the number only
 
 # dataset
-import small_mnist_one_image_offline_l72 as small_mnist
+import small_mnist_one_image_offline as small_mnist
 mnist_data = small_mnist.load_8x8_mnist()
 print('All data imported')
 
@@ -274,34 +277,7 @@ if __name__ == '__main__':
 
     ray.init()
 
-    global beta
-
-    if '1' in own_name:
-        for b in range(0, 3):
-            beta = b
-            print('beta = {}'.format(beta))
-            scores = calc_scores_all_labels(out)
-    elif '2' in own_name:
-        for b in range(3, 6):
-            beta = b
-            print('beta = {}'.format(beta))
-            scores = calc_scores_all_labels(out)
-    elif '3' in own_name:
-        for b in range(6, 9):
-            beta = b
-            print('beta = {}'.format(beta))
-            scores = calc_scores_all_labels(out)
-    elif '4' in own_name:
-        for b in range(9,11):
-            beta = b
-            print('beta = {}'.format(beta))
-            scores = calc_scores_all_labels(out)
-    elif '5' in own_name:
-        for b in range(11,13):
-            beta = b
-            print('beta = {}'.format(beta))
-            scores = calc_scores_all_labels(out)
-    else:
-        raise Exception("The filename doesn't contain a number between 1 and 5")
-
+    print('beta = {}'.format(beta))
+    out = calc_original()
+    scores = calc_scores_all_labels(out)
         

@@ -7,10 +7,9 @@ import sys
 ### global variables ###
 # parameters -----------
 own_name = os.path.splitext(sys.argv[0])
-own_name = own_name[0][-7:]
+own_name = own_name[0][14:]
 print('file name is {}'.format(own_name))
-beta  = own_name[-1]
-model = basepath[-8:]
+beta  = own_name[6:]
 
 filepath = os.path.dirname(os.path.abspath(__file__))
 basepath = filepath[:-11]

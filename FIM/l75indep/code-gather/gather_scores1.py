@@ -9,6 +9,8 @@ import pickle
 import ray
 import nujson as ujson
 import timing
+import os
+import sys
 
 # dynamic parsing of name and path
 own_name = os.path.splitext(sys.argv[0])
@@ -280,26 +282,31 @@ if __name__ == '__main__':
         for b in range(0, 3):
             beta = b
             print('beta = {}'.format(beta))
+            out = calc_original()
             scores = calc_scores_all_labels(out)
     elif '2' in own_name:
         for b in range(3, 6):
             beta = b
             print('beta = {}'.format(beta))
+            out = calc_original()
             scores = calc_scores_all_labels(out)
     elif '3' in own_name:
         for b in range(6, 9):
             beta = b
             print('beta = {}'.format(beta))
+            out = calc_original()
             scores = calc_scores_all_labels(out)
     elif '4' in own_name:
         for b in range(9,11):
             beta = b
             print('beta = {}'.format(beta))
+            out = calc_original()
             scores = calc_scores_all_labels(out)
     elif '5' in own_name:
         for b in range(11,13):
             beta = b
             print('beta = {}'.format(beta))
+            out = calc_original()
             scores = calc_scores_all_labels(out)
     else:
         raise Exception("The filename doesn't contain a number between 1 and 5")

@@ -8,22 +8,21 @@ import sys
 import timing
 
 # dynamic parsing of name and path
-own_name = os.path.splitext(sys.argv[0])
-own_name = own_name[0][-7:]
-print('file name is {}'.format(own_name)) # 1build0
+own_name = os.path.splitext(sys.argv[0]) # ../code-build/XbuildY.py
+own_name = own_name[0][14:] # XbuildY
+print('file name is {}'.format(own_name))
 
-# gets rid of /code_build
-filepath = os.path.dirname(os.path.abspath(__file__))
-basepath = filepath[:-11]
-model = basepath[-8:]
-print('base path is {}'.format(basepath)) # /home/blyo/python_tests/l7Xindep
-print('model version is {}'.format(model)) # l7Xindep
+filepath = os.path.dirname(os.path.abspath(__file__)) # /home/blyo/python_tests/l7Xindep/code_build
+basepath = filepath[:-11] # /home/blyo/python_tests/l7Xindep
+model = basepath[-8:] # l7Xindep
+print('base path is {}'.format(basepath)) 
+print('model version is {}'.format(model)) 
 
 ### global variables ###
 # parameters -----------
 size = 20002 # size of network is 20002
-beta = own_name[-1] # the bit at the end
-section = int(own_name[0])  # the bit at the front
+beta = own_name[6:] # the number at the end (0~12)
+section = int(own_name[0])  # the number at the front (1~2)
 
 # paths
 loadpath = basepath+'/data-scores/'
@@ -47,7 +46,7 @@ def load_from_pickle(filename):
     return object
 
 def export_fim(matrix):
-    np.save(outpath+'b{}-fim1.npy'.format(beta), matrix)
+    np.save(outpath+'b{}-fim{}.npy'.format(beta, section), matrix)
     print("The FIM matrix has been exported as b{}-fim1.npy".format(beta))
 
 
@@ -84,7 +83,7 @@ def calculate_fim(scores, softmax, start, end):
 
     # combining score pairs (weighted by softmax label values) to get the FIM 
     class_ids = [Pairing.remote(scores, i, softmax) for i in range(start, end)] # there should be 5 classes
-    obj_ids = [c.calc_score_pairs.remote() for c in class_ids[start:end]] # there should be 5 instances of calcs (one per label)
+    obj_ids = [c.calc_score_pairs.remote() for c in class_ids] # there should be 5 instances of calcs (one per label)
     ready_ids, _ = ray.wait(obj_ids, num_returns=end-start, timeout=None) # there should be 5 results
 
     print('starting to add the 5 matrices...')

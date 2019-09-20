@@ -1,8 +1,14 @@
 # sorting the eigenvalues from smallest to largest 
 import numpy as np
+import os
+
+# /home/blyo/python_tests/l7Xindep/code-solve
+filepath = os.path.dirname(os.path.abspath(__file__))
+basepath = filepath[:-11] # /home/blyo/python_tests/l7Xindep
+model = basepath[-8:] # l7Xindep
 
 # Paths
-sortpath = '/project2/sepalmer/blyo/data-eigs/'
+sortpath = '/dali/sepalmer/blyo/'+model+'/data-eigs/'
 
 def import_array(b):
     return np.load(sortpath + 'b{}-evalues.npy'.format(b))
