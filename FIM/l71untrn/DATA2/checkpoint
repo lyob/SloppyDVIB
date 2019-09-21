@@ -1,0 +1,2 @@
+model_checkpoint_path: "h100b32-beta5-test-15000"
+all_model_checkpoint_paths: "h100b32-beta5-test-15000"
