@@ -1,0 +1,2 @@
+model_checkpoint_path: "unimodel-beta12-test-135000"
+all_model_checkpoint_paths: "unimodel-beta12-test-135000"
