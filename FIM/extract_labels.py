@@ -16,7 +16,7 @@ mnist_data = small_mnist.load_8x8_mnist()
 print('dataset imported')
 
 # list of labels
-labels = mnist_data.test.labels
+labels = mnist_data.train.labels
 num_labels = len(labels)
 # print(type(labels))
 print('There are {} labels in total.'.format(num_labels))
