@@ -9,7 +9,10 @@ dataset = "test" # test or train
 h1 = 100
 h2 = h1
 bneck = 32 # = 2K
-filename = 'h'+str(h1)+'b'+str(bneck)
+filename = 'twoimg'
+num_epoch = 200
+# if you want to get epoch = 0 then set num_epoch = 1 and comment out the line
+# sess.run(train_tensor, feed_dict={images: im, labels: ls})
 
 ## importing packages
 import numpy as np
@@ -22,7 +25,7 @@ import json
 print('All libraries imported')
 
 # import dataset
-import small_mnist_full_offline as small_mnist
+import small_mnist_two_image_offline as small_mnist
 mnist_data = small_mnist.load_8x8_mnist()
 print('All data imported')
 
@@ -124,12 +127,12 @@ for beta_num in range(0,13): # range(0, 13) results in beta = 1e-0 to 1e-12
 
 
     ## Training occurs here
-    csvname = "./data-csv/full-{}-beta{}-{}.csv".format(filename, beta_num, dataset)
+    csvname = "./data-csv/{}-beta{}-{}-epoch{}.csv".format(filename, beta_num, dataset, num_epoch)
     dataname = './data-model/{}-beta{}-{}'.format(filename, beta_num, dataset)
 
     print('Training beginning for beta=1e-{} and the {} dataset.'.format(beta_num, dataset))
     with open(csvname, "a") as f:
-        for epoch in range(10000):
+        for epoch in range(num_epoch):
             for step in range(steps_per_batch):
                 im, ls = mnist_data.train.next_batch(batch_size)
                 sess.run(train_tensor, feed_dict={images: im, labels: ls})

@@ -109,17 +109,30 @@ def read_data_sets():
             train_images2 = np.vstack((train_images2, train_images[val]))
         train_labels2[i] = train_labels[val]
 
+    # select only two labels (6 and 7) from the test dataset
+    label_pos = find_specific_label([6,7], test_labels)
+
+    test_images2 = np.array([])
+    test_labels2 = np.zeros(len(label_pos))
+
+    for i, val in enumerate(label_pos):
+        if i == 0:
+            test_images2 = test_images[val]
+        else:
+            test_images2 = np.vstack((test_images2, test_images[val]))
+        test_labels2[i] = test_labels[val]
+
     print("size of train_images:", train_images.shape)
     print("size of train_labels:", train_labels.shape)
 
     print("size of train_images2:", train_images2.shape)
     print("size of train_labels2:", train_labels2.shape)
 
-    print("size of test_images:", test_images.shape)
-    print("size of test_labels:", test_labels.shape)
+    print("size of test_images:", test_images2.shape)
+    print("size of test_labels:", test_labels2.shape)
 
     train = Dataset(train_images2, train_labels2)
-    test = Dataset(test_images, test_labels)
+    test = Dataset(test_images2, test_labels2)
 
     return namedDataset(train=train, test=test)
 
@@ -129,5 +142,3 @@ namedDataset = collections.namedtuple('Dataset', ['train', 'test'])
 
 def load_8x8_mnist():
     return read_data_sets()
-
-load_8x8_mnist()

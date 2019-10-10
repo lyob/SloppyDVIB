@@ -1,2 +1,2 @@
-model_checkpoint_path: "h100b32-beta12-test-150000"
-all_model_checkpoint_paths: "h100b32-beta12-test-150000"
+model_checkpoint_path: "twoimg-beta12-test-600"
+all_model_checkpoint_paths: "twoimg-beta12-test-600"

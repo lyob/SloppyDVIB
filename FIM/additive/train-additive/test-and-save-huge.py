@@ -22,7 +22,7 @@ import json
 print('All libraries imported')
 
 # import dataset
-import small_mnist_two_image_offline as small_mnist
+import small_mnist_full_offline as small_mnist
 mnist_data = small_mnist.load_8x8_mnist()
 print('All data imported')
 
