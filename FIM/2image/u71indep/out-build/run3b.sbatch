@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J h71b3
+#SBATCH -J u71b3
 #SBATCH -p dali
 #SBATCH --account=pi-sepalmer
 #SBATCH -n 1 # one core

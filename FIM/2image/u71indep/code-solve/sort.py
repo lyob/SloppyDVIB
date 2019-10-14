@@ -9,7 +9,7 @@ basepath = filepath[:-11] # /home/blyo/python_tests/l7Xindep
 model = basepath[-8:] # l7Xindep
 
 # Paths
-dalipath = '/dali/sepalmer/blyo/additive/'
+dalipath = '/dali/sepalmer/blyo/2image/'
 sortpath = dalipath+model+'/data-eigs/'
 
 def import_array(b):

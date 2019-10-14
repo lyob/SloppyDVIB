@@ -9,10 +9,8 @@ dataset = "test" # test or train
 h1 = 100
 h2 = h1
 bneck = 32 # = 2K
-filename = 'twoimg'
-num_epoch = 200
-# if you want to get epoch = 0 then set num_epoch = 1 and comment out the line
-# sess.run(train_tensor, feed_dict={images: im, labels: ls})
+filename = '2image'
+num_epoch = 1000
 
 ## importing packages
 import numpy as np
@@ -133,10 +131,14 @@ for beta_num in range(0,13): # range(0, 13) results in beta = 1e-0 to 1e-12
     print('Training beginning for beta=1e-{} and the {} dataset.'.format(beta_num, dataset))
     with open(csvname, "a") as f:
         for epoch in range(num_epoch):
+            print(epoch)
+            if (epoch==0) or (epoch==10) or (epoch==50) or (epoch==200):
+                savepth = saver.save(sess, dataname, global_step)
+
             for step in range(steps_per_batch):
                 im, ls = mnist_data.train.next_batch(batch_size)
                 sess.run(train_tensor, feed_dict={images: im, labels: ls})
-            print(epoch)
+
             print("{},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f}".format(
                 epoch, *evaluate()), file=f)
             sys.stdout.flush()

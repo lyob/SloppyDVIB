@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J h71b1
+#SBATCH -J u71b1
 #SBATCH -p dali
 #SBATCH --account=pi-sepalmer
 #SBATCH -n 1 # one core
@@ -14,6 +14,6 @@
 source /home/blyo/.bash_profile
 source /home/blyo/.virtualenvs/py350/bin/activate
 
-mkdir /dali/sepalmer/blyo/additive/h71indep/
-mkdir /dali/sepalmer/blyo/additive/h71indep/data-fim/
+mkdir /dali/sepalmer/blyo/2image/u71indep/
+mkdir /dali/sepalmer/blyo/2image/u71indep/data-fim/
 python -u ../code-build/1build${SLURM_ARRAY_TASK_ID}.py

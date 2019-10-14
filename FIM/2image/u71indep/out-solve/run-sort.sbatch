@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=h71sort
+#SBATCH --job-name=u71sort
 #SBATCH --output=sort.out
 #SBATCH --error=sort.err
 #SBATCH --time=3:00:00

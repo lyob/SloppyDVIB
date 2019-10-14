@@ -12,8 +12,8 @@ own_name = os.path.splitext(sys.argv[0]) # ../code-build/XbuildY.py
 own_name = own_name[0][14:] # XbuildY
 print('file name is {}'.format(own_name))
 
-filepath = os.path.dirname(os.path.abspath(__file__)) # /home/blyo/python_tests/additive/l7Xindep/code_build
-basepath = filepath[:-11] # /home/blyo/python_tests/additive/l7Xindep
+filepath = os.path.dirname(os.path.abspath(__file__)) # /home/blyo/python_tests/2image/l7Xindep/code_build
+basepath = filepath[:-11] # /home/blyo/python_tests/2image/l7Xindep
 model = basepath[-8:] # l7Xindep
 print('base path is {}'.format(basepath)) 
 print('model version is {}'.format(model)) 
@@ -26,7 +26,7 @@ section = int(own_name[0])  # the number at the front (1~2)
 
 # paths
 loadpath = basepath+'/data-scores/'
-outpath = '/dali/sepalmer/blyo/additive/'+model+'/data-fim/'
+outpath = '/dali/sepalmer/blyo/2image/'+model+'/data-fim/'
 jsonpath = outpath
 
 print('beta is {}/9'.format(beta))

@@ -17,9 +17,10 @@ own_name = os.path.splitext(sys.argv[0])
 own_name = own_name[0][15:]
 print('file name is {}'.format(own_name))
 
-filepath = os.path.dirname(os.path.abspath(__file__)) # /home/blyo/python_tests/additive/l7Xindep/code_gather
-basepath = filepath[:-12] # /home/blyo/python_tests/additive/l7Xindep
-addpath = basepath[:-9] # /home/blyo/python_tests/additive
+filepath = os.path.dirname(os.path.abspath(__file__)) # /home/blyo/python_tests/2image/l7Xindep/code_gather
+basepath = filepath[:-12] # /home/blyo/python_tests/2image/l7Xindep
+model = basepath[-8:] # l7Xindep
+addpath = basepath[:-9] # /home/blyo/python_tests/2image
 print('base path is {}'.format(basepath))
 
 ### global variables ###
@@ -27,6 +28,19 @@ print('base path is {}'.format(basepath))
 weight_change = 0.01
 size = 20002 # size of network is 20002
 beta  = own_name[13:] # should be the number only
+
+modeltype = model[0] # l
+if modeltype == 'u':
+    epoch_num = 0
+elif modeltype == 'v':
+    epoch_num = 10
+elif modeltype == 'w':
+    epoch_num = 50
+elif modeltype == 'l':
+    epoch_num = 200
+elif modeltype == 'h':
+    epoch_num = 1000
+model_num = epoch_num * 3
 
 # dataset
 import small_mnist_one_image_offline as small_mnist
@@ -46,7 +60,7 @@ def calc_original():
         sess0 = tf.Session()
 
     with sess0 as sess:
-        modelpath = addpath+'/data-model/unimodel-beta{}-test-0'.format(beta)
+        modelpath = addpath+'/data-model/2image-beta{}-test-{}'.format(beta, model_num)
         graphfile = modelpath + '.meta'
         loader = tf.train.import_meta_graph(graphfile)
         loader.restore(sess, modelpath) # restores the graph
@@ -137,7 +151,7 @@ class Scoring:
             sess1 = tf.Session()
 
         with sess1 as sess:
-            modelpath = addpath+'/data-model/unimodel-beta{}-test-0'.format(beta)
+            modelpath = addpath+'/data-model/2image-beta{}-test-{}'.format(beta, model_num)
             graphfile = modelpath + '.meta'
             loader = tf.train.import_meta_graph(graphfile)
             loader.restore(sess, modelpath)

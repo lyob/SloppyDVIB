@@ -1,5 +1,7 @@
 #!/bin/bash
-#SBATCH -J h71g
+l='u'
+n='1'
+#SBATCH -J u71g
 #SBATCH -p dali
 #SBATCH --account=pi-sepalmer
 #SBATCH -n 1 # one core
@@ -14,5 +16,5 @@
 source /home/blyo/.bash_profile
 source /home/blyo/.virtualenvs/py350/bin/activate
 
-mkdir /home/blyo/python_tests/additive/h71indep/data-scores/
+mkdir /home/blyo/python_tests/2image/${l}7${n}indep/data-scores/
 python -u ../code-gather/gather_scores${SLURM_ARRAY_TASK_ID}.py

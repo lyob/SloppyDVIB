@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=h71solve
+#SBATCH --job-name=u71solve
 #SBATCH --output=solve.out
 #SBATCH --error=solve.err
 #SBATCH --time=3:00:00
@@ -12,7 +12,7 @@
 #SBATCH --export=ALL
 #SBATCH --exclusive
 
-mkdir /dali/sepalmer/blyo/h71indep/data-eigs/
+mkdir /dali/sepalmer/blyo/u71indep/data-eigs/
 
 source /home/blyo/.bash_profile
 source /home/blyo/.virtualenvs/py350/bin/activate

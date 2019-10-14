@@ -10,7 +10,7 @@ import timing
 # /home/blyo/python_tests/additive/l7Xindep/code-solve
 filepath = os.path.dirname(os.path.abspath(__file__))
 
-# /home/blyo/python_tests/additive/l7Xindep
+# /home/blyo/python_tests/2image/l7Xindep
 basepath = filepath[:-11]
 
 # l7Xindep
@@ -19,7 +19,7 @@ model = basepath[-8:]
 
 #%%
 # paths
-dalipath = 'dali/sepalmer/blyo/additive/'
+dalipath = 'dali/sepalmer/blyo/2image/'
 loadpath = dalipath+model+'/data-fim/'
 outpath = dalipath+model+'/data-eigs/'
 
