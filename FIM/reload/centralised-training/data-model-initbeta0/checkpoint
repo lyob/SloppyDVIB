@@ -1,0 +1,6 @@
+model_checkpoint_path: "iterated-beta11-15000"
+all_model_checkpoint_paths: "iterated-beta11-0"
+all_model_checkpoint_paths: "iterated-beta11-750"
+all_model_checkpoint_paths: "iterated-beta11-3000"
+all_model_checkpoint_paths: "iterated-beta11-7500"
+all_model_checkpoint_paths: "iterated-beta11-15000"

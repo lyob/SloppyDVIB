@@ -1,0 +1,3 @@
+model_checkpoint_path: "iterated-beta9-15750"
+all_model_checkpoint_paths: "iterated-beta9-15000"
+all_model_checkpoint_paths: "iterated-beta9-15750"
