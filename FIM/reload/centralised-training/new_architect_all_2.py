@@ -22,9 +22,11 @@ batch_size = 100
 steps_per_batch = int(mnist_data.train.num_examples / batch_size)
 
 brand_new = True
-beta_num = 0
+first_beta = True
+beta_num = 12
 
-while beta_num <= 13:
+# while beta_num < 13:
+while beta_num >= 0:
     print("brand_new?", brand_new)
     print("beta_num:", beta_num)
 
@@ -62,11 +64,9 @@ while beta_num <= 13:
             logits=logits, onehot_labels=one_hot_labels) / math.log(2)
         info_loss = tf.reduce_sum(tf.reduce_mean(
             ds.kl_divergence(encoding, prior), 0)) / math.log(2)
-        BETA = tf.get_variable(name="beta", initializer=1., dtype=tf.float32)
+        # BETA = tf.get_variable(name="beta", initializer=tf.constant(1e-12))
+        BETA = float("1e-0")
         total_loss = class_loss + BETA * info_loss
-        
-        # update_beta = tf.assign(BETA, float("1e-{}".format(beta_num)) )
-
 
         accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(logits, 1), labels), tf.float32))
         avg_accuracy = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(
@@ -79,7 +79,7 @@ while beta_num <= 13:
                                                 decay_steps=2*steps_per_batch,
                                                 decay_rate=0.97, staircase=True)
 
-        opt = tf.train.AdamOptimizer(learning_rate, 0.5)
+        opt = tf.train.AdamOptimizer(learning_rate, 0.5, name="optimizer")
         train_tensor = tf.contrib.training.create_train_op(total_loss, opt,
                                                         global_step)
 
@@ -88,8 +88,6 @@ while beta_num <= 13:
 
         tf.add_to_collection('cost_op', total_loss)
         tf.add_to_collection('train_op', train_tensor)
-        tf.add_to_collection('optimizer', opt)      
-        # tf.add_to_collection('beta_updater', update_beta)     
 
     else:
         print("Reloading existing")
@@ -105,19 +103,24 @@ while beta_num <= 13:
         if brand_new:
             sess.run(init)
 
+            def evaluate():
+                IZY, IZX, acc, avg_acc, tot_loss = sess.run([IZY_bound, IZX_bound, accuracy, avg_accuracy, total_loss],
+                        feed_dict={images: mnist_data.test.images, labels: mnist_data.test.labels})
+                return IZY, IZX, acc, avg_acc, 1-acc, 1-avg_acc, tot_loss
+
         else:
             global_step = graph.get_tensor_by_name('global_step:0')
             images = graph.get_tensor_by_name('images:0')
             labels = graph.get_tensor_by_name('labels:0')
 
-            BETA = graph.get_tensor_by_name('beta:0')
-            
-            # update_beta = tf.get_collection('beta_updater')[0]
+            # BETA = graph.get_tensor_by_name('beta:0')
+            if first_beta == True:
+                BETA = tf.get_variable(name='beta', initializer=0.)
             
             train_tensor = tf.get_collection('train_op')[0]
             total_loss = tf.get_collection('cost_op')[0] # maybe use tf.assign here?
-            opt = tf.get_collection('optimizer')[0]
 
+            opt = graph.get_tensor_by_name('optimizer:0')
             IZY_bound = graph.get_tensor_by_name('sub:0')
             IZX_bound = graph.get_tensor_by_name('truediv_1:0')
             accuracy = graph.get_tensor_by_name('Mean_1:0')
@@ -126,15 +129,14 @@ while beta_num <= 13:
 
             saver.restore(sess, modelpath)
 
-            # update_beta = tf.assign(BETA, BETA/10.0)
             update_beta = tf.assign(BETA, float("1e-"+str(beta_num)) )
             sess.run(update_beta)
             print("--------------- beta Tensor value is:", BETA.eval())
 
-        def evaluate():
-            IZY, IZX, acc, avg_acc = sess.run([IZY_bound, IZX_bound, accuracy, avg_accuracy],
-                    feed_dict={images: mnist_data.test.images, labels: mnist_data.test.labels})
-            return IZY, IZX, acc, avg_acc, 1-acc, 1-avg_acc
+            def evaluate():
+                IZY, IZX, acc, avg_acc, tot_loss, beta_out = sess.run([IZY_bound, IZX_bound, accuracy, avg_accuracy, total_loss, BETA],
+                        feed_dict={images: mnist_data.test.images, labels: mnist_data.test.labels})
+                return IZY, IZX, acc, avg_acc, 1-acc, 1-avg_acc, tot_loss, beta_out
         
         csvinit = basepath+"/data-csv/{}-initial.csv".format(modelname)
         csvname = basepath+"/data-csv/{}-beta{}.csv".format(modelname, beta_num)
@@ -145,11 +147,11 @@ while beta_num <= 13:
             with open(csvinit, "a") as e:
                     for epoch in range(1):
                         print(epoch)
-                        for step in range(1):
-                            im, ls = mnist_data.train.next_batch(batch_size)
-                            # sess.run(train_tensor, feed_dict={images:im,
-                            #                                   labels:ls})
-                    print("{},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f}".format(
+                        # for step in range(1):
+                        #     im, ls = mnist_data.train.next_batch(batch_size)
+                        #     sess.run(train_tensor, feed_dict={images:im,
+                        #                                       labels:ls})
+                    print("{},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{}".format(
                         epoch, *evaluate()), file=e)
                     sys.stdout.flush()
             e.close()
@@ -168,13 +170,14 @@ while beta_num <= 13:
                         im, ls = mnist_data.train.next_batch(batch_size)
                         sess.run(train_tensor, feed_dict={images:im, 
                                                           labels:ls})
-                    print("{},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f}".format(
+                    print("{},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{},{}".format(
                         epoch, *evaluate()), file=f)
                     sys.stdout.flush()
             f.close()
+            first_beta = False
 
             savepth = saver.save(sess, dataname, global_step) # for epoch=1000
-            beta_num += 1
+            beta_num -= 1
         
         
 
