@@ -44,7 +44,8 @@ print('All data imported')
 
 #%%
 for beta_num in range(0,13): # range(0, 13) results in beta = 1e-0 to 1e-12
-    print("--------------------------------------------------------\nNew beta: beta=1e-"+str(beta_num)+', dataset='+dataset)
+    print("--------------------------------------------------------\n \
+        New beta: beta=1e-"+str(beta_num)+', dataset='+dataset)
 
     ## Initialising graph
     tf.reset_default_graph()
